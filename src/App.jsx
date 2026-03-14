@@ -7,14 +7,18 @@ const player = new RetroPlayer();
 
 // Montgomery Ward catalog item numbers
 const CAT_NOS = {
-  'broken-cassette': 'Cat. 84-1137',
-  'vinyl-room':      'Cat. 84-2291',
-  'am-radio':        'Cat. 74-4403',
-  'reel-to-reel':    'Cat. 84-6618',
-  'datsun-6x9':      'Cat. 88-7743',
-  'drive-in':        'Cat. 63-0019',
-  'voicemail-90s':   'Cat. 93-5512',
-  'vhs-camcorder':   'Cat. 93-8801',
+  'broken-cassette':   'Cat. 84-1137',
+  'vinyl-room':        'Cat. 84-2291',
+  'am-radio':          'Cat. 74-4403',
+  'reel-to-reel':      'Cat. 84-6618',
+  'datsun-6x9':        'Cat. 88-7743',
+  'drive-in':          'Cat. 63-0019',
+  'voicemail-90s':     'Cat. 93-5512',
+  'vhs-camcorder':     'Cat. 93-8801',
+  'victrola':          'Cat. 23-0011',
+  'wax-cylinder':      'Cat. 03-0001',
+  'wartime-broadcast': 'Cat. 44-7788',
+  'crystal-set':       'Cat. 22-0003',
 };
 
 export default function App() {

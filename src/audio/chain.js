@@ -74,6 +74,10 @@ export class RetroChain {
     this.nodes.delay = new Tone.FeedbackDelay({ delayTime: '8n', feedback: 0.2 });
     this.nodes.delay.wet.value = 0;
 
+    // --- Air cut — fixed 10kHz ceiling, always on ---
+    // Removes digital harshness, gives everything a slightly aged top end
+    this.nodes.airCut = new Tone.Filter({ type: 'lowpass', frequency: 10000, Q: 0.6 });
+
     // --- Master output gain ---
     this.nodes.masterGain = new Tone.Gain(1.4); // +3dB headroom boost
 
@@ -93,6 +97,7 @@ export class RetroChain {
       this.nodes.vibrato,
       this.nodes.reverb,
       this.nodes.delay,
+      this.nodes.airCut,
       this.nodes.masterGain,
     ];
 

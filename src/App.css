@@ -714,6 +714,50 @@ body {
   --bg2:          #0C0814;
 }
 
+/* ── Victrola — sepia parlor brown ── */
+.app[data-preset="victrola"] {
+  --amber:        #A07828;
+  --amber-bright: #C8A040;
+  --amber-dim:    #604810;
+  --amber-glow:   rgba(160, 120, 40, 0.14);
+  --phosphor:     #D4B060;
+  --bg:           #0A0804;
+  --bg2:          #120E06;
+}
+
+/* ── Wax Cylinder — aged parchment / bone ── */
+.app[data-preset="wax-cylinder"] {
+  --amber:        #8A7450;
+  --amber-bright: #B89A6A;
+  --amber-dim:    #504028;
+  --amber-glow:   rgba(138, 116, 80, 0.14);
+  --phosphor:     #C8AA78;
+  --bg:           #090805;
+  --bg2:          #110E08;
+}
+
+/* ── Wartime Broadcast — olive drab / signal green ── */
+.app[data-preset="wartime-broadcast"] {
+  --amber:        #607838;
+  --amber-bright: #88A850;
+  --amber-dim:    #384820;
+  --amber-glow:   rgba(96, 120, 56, 0.14);
+  --phosphor:     #A8C860;
+  --bg:           #060804;
+  --bg2:          #0A0E06;
+}
+
+/* ── Crystal Set — electric pale blue-white ── */
+.app[data-preset="crystal-set"] {
+  --amber:        #7898C0;
+  --amber-bright: #A0C0E8;
+  --amber-dim:    #405870;
+  --amber-glow:   rgba(120, 152, 192, 0.14);
+  --phosphor:     #C0E0FF;
+  --bg:           #050608;
+  --bg2:          #080A10;
+}
+
 /* ── RESPONSIVE ──────────────────────────────────────────── */
 @media (max-width: 520px) {
   .preset-grid {

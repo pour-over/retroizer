@@ -1,11 +1,11 @@
 /**
  * Retroizer — Preset Definitions
  *
- * Values represent 100% intensity. The chain lerps everything toward
- * neutral at lower intensities, so 20–40% sounds realistic, 100% sounds
- * like the equipment was stored in a flood.
+ * Values represent 100% intensity. The chain lerps toward neutral at lower
+ * intensities — sweet spot is 20–40%. 100% is a warning label.
  *
- * Rule: the name IS the vibe. Keep copy sharp, specific, not trying too hard.
+ * Noise levels are calibrated for normal sources. Soft material will still
+ * get buried at high intensity — that's the point.
  */
 
 export const presets = [
@@ -25,21 +25,19 @@ export const presets = [
     midFreq: 900,
     midGain: -3,
 
-    // Crunchy warmth — more harmonic grit, warmer saturation order
     satWet: 0.94,
     satOrder: 10,
 
     compThreshold: -16,
     compRatio: 8,
 
-    // More wow/flutter — that seasick warble when the capstan slips
     chorusWet: 0.70,
     chorusFreq: 0.7,
 
-    vibratoDepth: 0.48,   // up from 0.28 — you feel it now
-    vibratoFreq: 0.55,    // slow, lurching
+    vibratoDepth: 0.48,
+    vibratoFreq: 0.55,
 
-    noiseLevel: 0.15,
+    noiseLevel: 0.09,        // pulled back — was 0.15
     noiseFilterFreq: 3500,
 
     reverbWet: 0.55,
@@ -67,13 +65,11 @@ export const presets = [
 
     phaserWet: 0.45,
 
-    // Cracks & skips — low noiseFilterFreq gives crackle texture (not smooth hiss),
-    // high noiseLevel makes it pop, delay adds subtle skip artifact
-    noiseLevel: 0.26,
-    noiseFilterFreq: 700,  // crackle lives here, not at 2kHz
+    noiseLevel: 0.15,        // pulled back — was 0.26, still crackly
+    noiseFilterFreq: 700,    // crackle texture lives here
 
     reverbWet: 0.82,
-    delayWet: 0.09,        // skip artifacts — short ghost repeat
+    delayWet: 0.09,          // skip artifacts
     delayFeedback: 0.08,
     chorusWet: 0,
     vibratoDepth: 0,
@@ -85,7 +81,6 @@ export const presets = [
     emoji: '📻',
     description: 'Brutal bandpass, nasal mids, transistor grit. Sounds like a dashboard. At 100%: sounds like a dashboard in 1974, driving through a tunnel, in a lightning storm.',
 
-    // More hi-pass — tighter, thinner, more transistor honk
     hiPass: 560,
     loPass: 3200,
     hiShelfGain: -30,
@@ -102,7 +97,7 @@ export const presets = [
     tremoloDepth: 0.18,
     tremoloFreq: 60,
 
-    noiseLevel: 0.09,
+    noiseLevel: 0.06,        // pulled back — was 0.09
     noiseFilterFreq: 5000,
 
     reverbWet: 0.06,
@@ -115,8 +110,7 @@ export const presets = [
     id: 'reel-to-reel',
     name: 'Reel to Reel',
     emoji: '🎞️',
-    // Kinda bad — warble, wow, flutter, and that mono-ish phase collapse of old tape
-    description: 'Old tape machine left in a storage unit since 1978. The heads need cleaning. The capstan is slipping. It sounds like it\'s thinking about quitting.',
+    description: "Old tape machine left in a storage unit since 1978. The heads need cleaning. The capstan is slipping. It sounds like it's thinking about quitting.",
 
     hiPass: 60,
     loPass: 11000,
@@ -131,18 +125,15 @@ export const presets = [
     compThreshold: -24,
     compRatio: 5,
 
-    // Heavy warble — chorus collapses stereo width like old azimuth drift
     chorusWet: 0.78,
     chorusFreq: 0.55,
 
-    // Serious wow & flutter — the capstan is slipping
     vibratoDepth: 0.38,
     vibratoFreq: 0.38,
 
-    // Phaser = mono-ish phase collapse, that old tape "center-heavy" sound
-    phaserWet: 0.68,
+    phaserWet: 0.68,         // mono-ish phase collapse
 
-    noiseLevel: 0.11,
+    noiseLevel: 0.07,        // pulled back — was 0.11
     noiseFilterFreq: 6000,
 
     reverbWet: 0.88,
@@ -177,10 +168,8 @@ export const presets = [
     chorusWet: 0.72,
     chorusFreq: 1.1,
 
-    // Engine rumble — noise filtered way down to ~120Hz = mechanical low-end drone
-    // The blown speaker can't reproduce it, but the chassis sure can
-    noiseLevel: 0.28,
-    noiseFilterFreq: 120,  // this is the engine now
+    noiseLevel: 0.18,        // pulled back — was 0.28, but engine rumble stays
+    noiseFilterFreq: 120,    // engine. just engine.
 
     reverbWet: 0.42,
     delayWet: 0,
@@ -192,8 +181,7 @@ export const presets = [
     emoji: '🎬',
     description: '1963 parking lot speaker hanging on your car window. Volume knob broke off in 1967. Someone spraypainted SOUND on the pole. Works great.',
 
-    // Super hi-passed — these speakers had nothing below 700Hz, nothing
-    hiPass: 750,
+    hiPass: 750,             // nothing below 700Hz. nothing.
     loPass: 3800,
     hiShelfGain: -22,
     loShelfGain: -12,
@@ -209,7 +197,7 @@ export const presets = [
     tremoloDepth: 0.16,
     tremoloFreq: 0.25,
 
-    noiseLevel: 0.12,
+    noiseLevel: 0.08,        // pulled back — was 0.12
     noiseFilterFreq: 3200,
 
     reverbWet: 0.50,
@@ -224,21 +212,20 @@ export const presets = [
     emoji: '📞',
     description: 'You have. Forty-three. New messages. [three second silence] [click]. Recorded at 8kHz over a phone line that also handled fax. Your band sounds like a fax now.',
 
-    // Classic POTS phone EQ — 400Hz HP, 4kHz LP, honk at 1–3kHz
-    hiPass: 400,           // nothing below 400Hz on a phone line
-    loPass: 4000,          // hard ceiling at 4kHz
-    hiShelfGain: -32,      // kill everything above 4k
-    loShelfGain: -20,      // kill the lows hard
-    midFreq: 1800,         // honkiness center
-    midGain: 14,           // big honk — this is the phone "voice"
+    hiPass: 400,             // POTS band starts here
+    loPass: 4000,            // POTS band ends here
+    hiShelfGain: -32,
+    loShelfGain: -20,
+    midFreq: 1800,
+    midGain: 14,             // the honk. this is the honk.
 
     satWet: 0.82,
     satOrder: 12,
 
     compThreshold: -8,
-    compRatio: 24,         // broadcast codec crush
+    compRatio: 24,
 
-    noiseLevel: 0.06,
+    noiseLevel: 0.04,        // pulled back — was 0.06
     noiseFilterFreq: 4500,
 
     reverbWet: 0.10,
@@ -253,7 +240,6 @@ export const presets = [
     id: 'vhs-camcorder',
     name: 'VHS Camcorder',
     emoji: '📹',
-    // Stereo cassette DNA + reel-to-reel-level wow/warble. Stays wide, falls apart.
     description: "Dad's birthday party, 1993. Panasonic PV-18. Dead battery indicator. Heads cleaning tape that made things worse. The zoom is stuck. Nobody is looking at the camera.",
 
     hiPass: 65,
@@ -263,28 +249,173 @@ export const presets = [
     midFreq: 2500,
     midGain: 3,
 
-    // Crunchy like cassette but keeping stereo width
     satWet: 0.72,
     satOrder: 7,
 
     compThreshold: -18,
     compRatio: 8,
 
-    // Head-switching artifacts — fast chorus flutter
     chorusWet: 0.75,
-    chorusFreq: 5.2,
+    chorusFreq: 5.2,         // head-switching flutter
 
-    // Max wow/warble like reel-to-reel — slow mechanical speed drift
     vibratoDepth: 0.42,
-    vibratoFreq: 0.45,     // slow and lurching, not 28Hz flutter
+    vibratoFreq: 0.45,       // slow transport wow — not 28Hz flutter
 
-    noiseLevel: 0.18,
+    noiseLevel: 0.11,        // pulled back — was 0.18
     noiseFilterFreq: 6000,
 
     reverbWet: 0.62,
     delayWet: 0,
-    phaserWet: 0,          // no phaser — stays stereo unlike reel-to-reel
+    phaserWet: 0,            // stays stereo, unlike reel-to-reel
     tremoloDepth: 0,
+  },
+
+  // ── ROW 3 — The Old Timey Wing ────────────────────────────────────────────
+
+  {
+    id: 'victrola',
+    name: 'Victrola',
+    emoji: '🎺',
+    description: "1923. A hand-cranked Victrola in somebody's parlor. The horn is pointing at the ceiling. Half the musicians are standing too far back. All of them are wearing hats.",
+
+    // Acoustic recording bandwidth — roughly 200Hz to 3.5kHz through a horn
+    hiPass: 200,
+    loPass: 3500,
+    hiShelfGain: -30,
+    loShelfGain: -8,
+    midFreq: 1400,           // horn resonance peak
+    midGain: 14,
+
+    satWet: 0.88,
+    satOrder: 9,
+
+    compThreshold: -22,
+    compRatio: 5,
+
+    chorusWet: 0.50,
+    chorusFreq: 0.3,
+
+    vibratoDepth: 0.38,      // hand-cranked speed variation
+    vibratoFreq: 0.18,       // slow and inconsistent — someone's arm getting tired
+
+    phaserWet: 0.78,         // mono horn
+
+    noiseLevel: 0.20,        // heavy shellac surface noise
+    noiseFilterFreq: 2000,
+
+    reverbWet: 0.85,         // parlor room resonance — long and boxy
+    delayWet: 0,
+    tremoloDepth: 0,
+  },
+
+  {
+    id: 'wax-cylinder',
+    name: 'Wax Cylinder',
+    emoji: '🥫',
+    description: "1903. Edison. A wax cylinder recording of a man saying his name into a horn in a room that no longer exists. The cylinder has been in a box for 121 years. You can tell.",
+
+    // Pre-electric acoustic recording — brutally limited
+    hiPass: 380,
+    loPass: 2200,
+    hiShelfGain: -38,
+    loShelfGain: -18,
+    midFreq: 1000,           // tiny horn resonance
+    midGain: 18,
+
+    satWet: 0.96,
+    satOrder: 18,            // maximum harmonic destruction
+
+    compThreshold: -28,
+    compRatio: 3,            // no dynamics control — this is just physics
+
+    chorusWet: 0.62,
+    chorusFreq: 0.2,
+
+    vibratoDepth: 0.58,      // wax cylinder speed variation is brutal
+    vibratoFreq: 0.12,       // very slow — the spring is running down
+
+    phaserWet: 0.90,         // total mono collapse
+
+    noiseLevel: 0.30,        // the cylinder IS noise at this point
+    noiseFilterFreq: 1500,
+
+    reverbWet: 0.72,         // small recording room, boxy horn resonance
+    delayWet: 0,
+    tremoloDepth: 0,
+  },
+
+  {
+    id: 'wartime-broadcast',
+    name: 'Wartime Radio',
+    emoji: '📡',
+    description: "1944 Armed Forces Radio. Shortwave from somewhere in the Pacific. Atmospheric interference, signal drift, a trumpet playing something that cuts to static. Then back.",
+
+    hiPass: 180,
+    loPass: 6500,
+    hiShelfGain: -22,
+    loShelfGain: -6,
+    midFreq: 1200,
+    midGain: 9,
+
+    satWet: 0.68,
+    satOrder: 7,
+
+    compThreshold: -18,
+    compRatio: 9,
+
+    chorusWet: 0.30,
+    chorusFreq: 0.9,
+
+    vibratoDepth: 0.18,      // shortwave signal drift
+    vibratoFreq: 0.7,
+
+    tremoloDepth: 0.22,      // signal fading in and out
+    tremoloFreq: 0.8,        // slow, atmospheric
+
+    noiseLevel: 0.14,        // static and interference
+    noiseFilterFreq: 4000,
+
+    reverbWet: 0.80,         // metal-walled broadcast room + ionospheric reverb
+    delayWet: 0,
+    phaserWet: 0.40,
+  },
+
+  {
+    id: 'crystal-set',
+    name: 'Crystal Set',
+    emoji: '⚡',
+    description: "1922. A galena crystal, a coil of wire, and a pair of headphones pressed hard against one ear. Your neighbor's kid built this. It almost works. You can hear something. Probably music.",
+
+    // Crystal radio has almost no low end and a narrow high-mids window
+    hiPass: 820,
+    loPass: 2800,
+    hiShelfGain: -34,
+    loShelfGain: -22,
+    midFreq: 1600,
+    midGain: 16,
+
+    satWet: 0.92,
+    satOrder: 14,
+
+    compThreshold: -8,
+    compRatio: 18,
+
+    vibratoDepth: 0.22,      // signal drift from the galena crystal
+    vibratoFreq: 0.28,
+
+    tremoloDepth: 0.30,      // the signal fades in and out constantly
+    tremoloFreq: 0.45,       // slow amplitude wavering
+
+    chorusWet: 0.35,
+    chorusFreq: 0.5,
+
+    phaserWet: 0.60,
+
+    noiseLevel: 0.18,        // RF interference is constant company
+    noiseFilterFreq: 3000,
+
+    reverbWet: 0.70,         // long — through ether, not air
+    delayWet: 0,
   },
 
 ];
