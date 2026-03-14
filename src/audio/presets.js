@@ -40,7 +40,7 @@ export const presets = [
     noiseLevel: 0.14,
     noiseFilterFreq: 3500,
 
-    reverbWet: 0.06,
+    reverbWet: 0.55,   // spring reverb — tape machines had plate/spring, you notice it
     delayWet: 0,
   },
 
@@ -68,7 +68,7 @@ export const presets = [
     noiseLevel: 0.13,
     noiseFilterFreq: 2200,
 
-    reverbWet: 0.35,
+    reverbWet: 0.82,   // lush room — the whole point of vinyl room is the room
     delayWet: 0,
     chorusWet: 0,
     vibratoDepth: 0,
@@ -99,7 +99,7 @@ export const presets = [
     noiseLevel: 0.09,
     noiseFilterFreq: 5000,
 
-    reverbWet: 0,
+    reverbWet: 0.06,   // AM radio is a dry/dead signal — tiny bit of box resonance
     delayWet: 0,
     chorusWet: 0,
     vibratoDepth: 0,
@@ -133,7 +133,7 @@ export const presets = [
     noiseLevel: 0.04,
     noiseFilterFreq: 8000,
 
-    reverbWet: 0.45,
+    reverbWet: 0.88,   // studio room — this is THE reel-to-reel sound, make it bloom
     delayWet: 0,
     phaserWet: 0,
     tremoloDepth: 0,
@@ -169,7 +169,7 @@ export const presets = [
     noiseLevel: 0.18,
     noiseFilterFreq: 2000,
 
-    reverbWet: 0.09,
+    reverbWet: 0.42,   // small car cabin — short, boxy, you're sitting in a tin can
     delayWet: 0,
   },
 
@@ -198,7 +198,7 @@ export const presets = [
     noiseLevel: 0.12,
     noiseFilterFreq: 3200,
 
-    reverbWet: 0.06,
+    reverbWet: 0.50,   // outdoor lot + metal pole + concrete — spacious and hollow
     delayWet: 0,
     chorusWet: 0,
     vibratoDepth: 0,
@@ -226,7 +226,7 @@ export const presets = [
     noiseLevel: 0.06,
     noiseFilterFreq: 4500,
 
-    reverbWet: 0,
+    reverbWet: 0.12,   // slight handset/room resonance, stays mostly dry
     delayWet: 0.15,
     delayFeedback: 0.12,
     chorusWet: 0,
@@ -262,7 +262,7 @@ export const presets = [
     noiseLevel: 0.08,
     noiseFilterFreq: 6000,
 
-    reverbWet: 0.12,
+    reverbWet: 0.62,   // living room carpet, cheap furniture — warm and boxy
     delayWet: 0,
     phaserWet: 0,
     tremoloDepth: 0,

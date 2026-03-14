@@ -67,7 +67,7 @@ export class RetroChain {
     this.nodes.noiseFilter.connect(this.nodes.noiseGain);
 
     // --- Reverb ---
-    this.nodes.reverb = new Tone.Reverb({ decay: 1.5, preDelay: 0.01 });
+    this.nodes.reverb = new Tone.Reverb({ decay: 2.8, preDelay: 0.02 });
     this.nodes.reverb.wet.value = 0;
 
     // --- Delay ---
@@ -75,7 +75,7 @@ export class RetroChain {
     this.nodes.delay.wet.value = 0;
 
     // --- Master output gain ---
-    this.nodes.masterGain = new Tone.Gain(1);
+    this.nodes.masterGain = new Tone.Gain(1.4); // +3dB headroom boost
 
     // Wire the main signal path
     // (player → chain is connected in applyPreset / play)
