@@ -1,0 +1,282 @@
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { RetroPlayer } from './audio/player.js';
+import { presets } from './audio/presets.js';
+import './App.css';
+
+const player = new RetroPlayer();
+
+// Montgomery Ward catalog item numbers — one per preset
+const CAT_NOS = {
+  'broken-cassette': 'Cat. 84-1137',
+  'vinyl-room':      'Cat. 84-2291',
+  'am-radio':        'Cat. 84-4403',
+  'reel-to-reel':    'Cat. 84-6618',
+};
+
+export default function App() {
+  const [loaded,      setLoaded]      = useState(false);
+  const [fileName,    setFileName]    = useState('');
+  const [duration,    setDuration]    = useState(0);
+  const [playState,   setPlayState]   = useState('idle');
+  const [presetId,    setPresetId]    = useState('broken-cassette');
+  const [intensity,   setIntensity]   = useState(0.8);
+  const [exporting,   setExporting]   = useState(false);
+  const [dragging,    setDragging]    = useState(false);
+  const [statusText,  setStatusText]  = useState('awaiting source file...');
+  const [statusState, setStatusState] = useState('idle'); // idle | active | error
+
+  const fileInputRef = useRef(null);
+
+  // Keep refs so the player callback always sees fresh values
+  const fileNameRef = useRef(fileName);
+  const durationRef = useRef(duration);
+  const presetIdRef = useRef(presetId);
+  const loadedRef   = useRef(loaded);
+  fileNameRef.current  = fileName;
+  durationRef.current  = duration;
+  presetIdRef.current  = presetId;
+  loadedRef.current    = loaded;
+
+  useEffect(() => {
+    player.onStateChange((state) => {
+      setPlayState(state);
+      if (state === 'playing') {
+        setStatusText(`transmitting · ${fileNameRef.current || 'source'}`);
+        setStatusState('active');
+      } else if (state === 'idle' && loadedRef.current) {
+        setStatusText(
+          `ready · ${formatDuration(durationRef.current)} · ${presetIdRef.current.replace(/-/g, ' ')}`
+        );
+        setStatusState('active');
+      }
+    });
+    return () => player.dispose();
+  }, []);
+
+  const handleFile = useCallback(async (file) => {
+    if (!file) return;
+    setFileName(file.name);
+    setLoaded(false);
+    setStatusText(`decoding · ${file.name}`);
+    setStatusState('active');
+    try {
+      const dur = await player.load(file);
+      player.applyPreset(presetId, intensity);
+      setDuration(dur);
+      setLoaded(true);
+      setStatusText(`ready · ${formatDuration(dur)} · ${file.name}`);
+      setStatusState('active');
+    } catch (e) {
+      console.error(e);
+      setStatusText('error decoding file — try wav or mp3');
+      setStatusState('error');
+    }
+  }, [presetId, intensity]);
+
+  const handleDrop = useCallback((e) => {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  }, [handleFile]);
+
+  const handlePreset = (id) => {
+    setPresetId(id);
+    player.applyPreset(id, intensity);
+    if (loaded) {
+      setStatusText(`preset: ${id.replace(/-/g, ' ')} · intensity ${Math.round(intensity * 100)}`);
+    }
+  };
+
+  const handleIntensity = (val) => {
+    setIntensity(val);
+    player.applyPreset(presetId, val);
+  };
+
+  const handlePlay = () => {
+    if (playState === 'playing') {
+      player.stop();
+      setStatusText(`stopped · ${formatDuration(duration)} · ${presetId.replace(/-/g, ' ')}`);
+      setStatusState('active');
+    } else {
+      player.play();
+    }
+  };
+
+  const handleExport = async () => {
+    setExporting(true);
+    setStatusText('rendering to disc...');
+    setStatusState('active');
+    try {
+      const blob = await player.export(presetId, intensity);
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      const base = fileName.replace(/\.[^.]+$/, '');
+      const preset = presets.find(p => p.id === presetId);
+      a.href     = url;
+      a.download = `${base}_${preset.id}.wav`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setStatusText('export complete · wav written to disc');
+    } catch (e) {
+      console.error(e);
+      setStatusText('export error');
+      setStatusState('error');
+    }
+    setExporting(false);
+  };
+
+  const activePreset = presets.find(p => p.id === presetId);
+
+  return (
+    <div className="app">
+
+      {/* ── HEADER ─────────────────────────────────────── */}
+      <header className="app-header">
+        <div className="ward-banner">Montgomery Ward Electronics Division</div>
+        <h1 className="logo">RETROIZER</h1>
+        <p className="tagline">▸ audio aging engine ◂</p>
+        <div className="model-plate">
+          <span className="model-plate-item">Cat. No. <span>RZ-1951</span></span>
+          <span className="model-plate-item">Model <span>AE-51</span></span>
+          <span className="model-plate-item">Mfd. <span>1951</span></span>
+        </div>
+      </header>
+
+      <main className="app-main">
+
+        {/* ── SOURCE INPUT ─────────────────────────────── */}
+        <div className="panel">
+          <div className="panel-label">
+            <span>◈ Source Input</span>
+            <span className="panel-cat">Pg. 847</span>
+          </div>
+          <div
+            className={`dropzone${dragging ? ' dragging' : ''}${loaded ? ' has-file' : ''}`}
+            onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="audio/*"
+              style={{ display: 'none' }}
+              onChange={e => handleFile(e.target.files[0])}
+            />
+            {loaded ? (
+              <div className="file-info">
+                <span className="file-name">{fileName}</span>
+                <span className="file-duration">{formatDuration(duration)} · loaded</span>
+              </div>
+            ) : (
+              <div className="drop-prompt">
+                <span className="drop-icon">◎</span>
+                <span className="drop-main-text">Insert Recording</span>
+                <span className="drop-sub-text">Drop audio file here or click to browse</span>
+                <span className="drop-hint">WAV · MP3 · FLAC · OGG</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── AGING PRESET ─────────────────────────────── */}
+        <div className="panel">
+          <div className="panel-label">
+            <span>◈ Aging Preset</span>
+            <span className="panel-cat">Select One</span>
+          </div>
+          <div className="preset-grid">
+            {presets.map(p => (
+              <button
+                key={p.id}
+                className={`preset-card${presetId === p.id ? ' active' : ''}`}
+                onClick={() => handlePreset(p.id)}
+              >
+                <span className="preset-cat-no">{CAT_NOS[p.id]}</span>
+                <span className="preset-emoji">{p.emoji}</span>
+                <span className="preset-name">{p.name}</span>
+              </button>
+            ))}
+          </div>
+          {activePreset && (
+            <p className="preset-description">{activePreset.description}</p>
+          )}
+        </div>
+
+        {/* ── WIRED REMOTE CONTROL ─────────────────────── */}
+        <div className="panel">
+          <div className="panel-label">
+            <span>◈ Remote Control (Wired)</span>
+            <span className="panel-cat">Model RW-51</span>
+          </div>
+          <div className="remote-panel">
+            <div className="intensity-row">
+              <span className="intensity-label">MIN</span>
+              <div className="slider-wrap">
+                <div className="slider-wire" />
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={intensity}
+                  onChange={e => handleIntensity(parseFloat(e.target.value))}
+                  className="intensity-slider"
+                />
+              </div>
+              <span className="intensity-label intensity-label-right">MAX</span>
+              <span className="intensity-value">{Math.round(intensity * 100)}</span>
+            </div>
+            <div className="remote-desc">
+              Aging intensity · controls depth of all processing effects
+            </div>
+          </div>
+        </div>
+
+        {/* ── PLAYBACK / EXPORT ────────────────────────── */}
+        <div className="panel">
+          <div className="panel-label">
+            <span>◈ Playback / Export</span>
+            <span className="panel-cat">§ 14.2</span>
+          </div>
+          <div className="controls">
+            <button
+              className={`btn-play${playState === 'playing' ? ' playing' : ''}`}
+              onClick={handlePlay}
+              disabled={!loaded}
+            >
+              {playState === 'playing' ? '■ Stop' : '▶ Preview'}
+            </button>
+            <button
+              className="btn-export"
+              onClick={handleExport}
+              disabled={!loaded || exporting}
+            >
+              {exporting ? 'Rendering...' : '⬇ Export WAV'}
+            </button>
+          </div>
+          <div className="status-bar">
+            <div className={`status-dot${statusState === 'active' ? ' active' : statusState === 'error' ? ' error' : ''}`} />
+            <span>{statusText}</span>
+          </div>
+        </div>
+
+      </main>
+
+      {/* ── FOOTER ───────────────────────────────────────── */}
+      <footer className="app-footer">
+        <div className="footer-guarantee">Satisfaction Guaranteed · Since 1872</div>
+        <div className="footer-copy">Retroizer · Back Pocket Music © 2025 · retroizer.com</div>
+      </footer>
+
+    </div>
+  );
+}
+
+function formatDuration(s) {
+  const m   = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
