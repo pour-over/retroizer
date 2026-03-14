@@ -120,9 +120,9 @@ export class RetroChain {
     const p = preset;
     const i = Math.max(0, Math.min(1, intensity));
 
-    // EQ
-    this.nodes.hiPass.frequency.rampTo(p.hiPass ?? 80, 0.1);
-    this.nodes.loPass.frequency.rampTo(p.loPass ?? 18000, 0.1);
+    // EQ — frequencies lerp from neutral toward preset extremes with intensity
+    this.nodes.hiPass.frequency.rampTo(lerp(20,    p.hiPass  ?? 80,    i), 0.15);
+    this.nodes.loPass.frequency.rampTo(lerp(20000, p.loPass  ?? 18000, i), 0.15);
     this.nodes.hiShelf.gain.rampTo((p.hiShelfGain ?? 0) * i, 0.1);
     this.nodes.loShelf.gain.rampTo((p.loShelfGain ?? 0) * i, 0.1);
     this.nodes.midPeak.frequency.rampTo(p.midFreq ?? 1000, 0.1);

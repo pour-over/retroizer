@@ -5,12 +5,16 @@ import './App.css';
 
 const player = new RetroPlayer();
 
-// Montgomery Ward catalog item numbers — one per preset
+// Montgomery Ward catalog item numbers
 const CAT_NOS = {
   'broken-cassette': 'Cat. 84-1137',
   'vinyl-room':      'Cat. 84-2291',
-  'am-radio':        'Cat. 84-4403',
+  'am-radio':        'Cat. 74-4403',
   'reel-to-reel':    'Cat. 84-6618',
+  'datsun-6x9':      'Cat. 88-7743',
+  'drive-in':        'Cat. 63-0019',
+  'voicemail-90s':   'Cat. 93-5512',
+  'vhs-camcorder':   'Cat. 93-8801',
 };
 
 export default function App() {
@@ -19,23 +23,23 @@ export default function App() {
   const [duration,    setDuration]    = useState(0);
   const [playState,   setPlayState]   = useState('idle');
   const [presetId,    setPresetId]    = useState('broken-cassette');
-  const [intensity,   setIntensity]   = useState(0.8);
+  const [intensity,   setIntensity]   = useState(0.5);
   const [exporting,   setExporting]   = useState(false);
   const [dragging,    setDragging]    = useState(false);
   const [statusText,  setStatusText]  = useState('awaiting source file...');
-  const [statusState, setStatusState] = useState('idle'); // idle | active | error
+  const [statusState, setStatusState] = useState('idle');
 
   const fileInputRef = useRef(null);
 
-  // Keep refs so the player callback always sees fresh values
+  // Stable refs for callback closure
   const fileNameRef = useRef(fileName);
   const durationRef = useRef(duration);
   const presetIdRef = useRef(presetId);
   const loadedRef   = useRef(loaded);
-  fileNameRef.current  = fileName;
-  durationRef.current  = duration;
-  presetIdRef.current  = presetId;
-  loadedRef.current    = loaded;
+  fileNameRef.current = fileName;
+  durationRef.current = duration;
+  presetIdRef.current = presetId;
+  loadedRef.current   = loaded;
 
   useEffect(() => {
     player.onStateChange((state) => {
@@ -128,8 +132,20 @@ export default function App() {
 
   const activePreset = presets.find(p => p.id === presetId);
 
+  // Intensity readout label — changes with value for personality
+  const intensityLabel = () => {
+    const pct = Math.round(intensity * 100);
+    if (pct <= 10)  return 'Barely';
+    if (pct <= 25)  return 'Subtle';
+    if (pct <= 45)  return 'Vintage';
+    if (pct <= 65)  return 'Wrecked';
+    if (pct <= 80)  return 'Destroyed';
+    if (pct <= 95)  return 'Unlistenable';
+    return 'Why';
+  };
+
   return (
-    <div className="app">
+    <div className="app" data-preset={presetId}>
 
       {/* ── HEADER ─────────────────────────────────────── */}
       <header className="app-header">
@@ -229,8 +245,9 @@ export default function App() {
               <span className="intensity-label intensity-label-right">MAX</span>
               <span className="intensity-value">{Math.round(intensity * 100)}</span>
             </div>
-            <div className="remote-desc">
-              Aging intensity · controls depth of all processing effects
+            <div className="remote-footer">
+              <span className="remote-desc">Aging Intensity · sweet spot: 20–40% · 100% is a warning</span>
+              <span className="intensity-word">{intensityLabel()}</span>
             </div>
           </div>
         </div>

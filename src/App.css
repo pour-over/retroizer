@@ -581,6 +581,139 @@ body {
   text-transform: uppercase;
 }
 
+/* ── REMOTE FOOTER ───────────────────────────────────────── */
+.remote-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.65rem;
+}
+
+.intensity-word {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--amber);
+  letter-spacing: 0.2em;
+  opacity: 0.7;
+  text-transform: uppercase;
+  transition: color 0.4s;
+}
+
+/* ── PER-PRESET VISUAL THEMES ────────────────────────────── */
+/* Each preset swaps the amber family. Everything else cascades. */
+
+/* Transitions on color-bearing elements */
+.app,
+.logo,
+.tagline,
+.ward-banner,
+.model-plate,
+.model-plate-item,
+.panel,
+.panel::before,
+.panel-label,
+.dropzone,
+.preset-card,
+.preset-card.active,
+.btn-play,
+.btn-export,
+.status-bar,
+.intensity-word {
+  transition:
+    color 0.45s ease,
+    background-color 0.45s ease,
+    border-color 0.45s ease,
+    box-shadow 0.45s ease;
+}
+
+/* ── Broken Cassette — amber (default) ── */
+.app[data-preset="broken-cassette"] {
+  --amber:        #C8830A;
+  --amber-bright: #F5A623;
+  --amber-dim:    #7A5010;
+  --amber-glow:   rgba(200, 131, 10, 0.14);
+  --phosphor:     #A8FF60;
+  --bg:           #0A0804;
+  --bg2:          #110E07;
+}
+
+/* ── Vinyl Room — warm old gold ── */
+.app[data-preset="vinyl-room"] {
+  --amber:        #B89428;
+  --amber-bright: #E8C040;
+  --amber-dim:    #6B5610;
+  --amber-glow:   rgba(184, 148, 40, 0.14);
+  --phosphor:     #E8C040;
+  --bg:           #0B0904;
+  --bg2:          #130F06;
+}
+
+/* ── AM Radio — harsh transistor orange ── */
+.app[data-preset="am-radio"] {
+  --amber:        #CC4A0A;
+  --amber-bright: #FF6B20;
+  --amber-dim:    #882808;
+  --amber-glow:   rgba(204, 74, 10, 0.14);
+  --phosphor:     #FF9060;
+  --bg:           #0C0604;
+  --bg2:          #160904;
+}
+
+/* ── Reel to Reel — cool studio teal ── */
+.app[data-preset="reel-to-reel"] {
+  --amber:        #0A8878;
+  --amber-bright: #14B8A0;
+  --amber-dim:    #065548;
+  --amber-glow:   rgba(10, 136, 120, 0.14);
+  --phosphor:     #40F0D0;
+  --bg:           #040C0B;
+  --bg2:          #061410;
+}
+
+/* ── 1988 Datsun — rust / copper ── */
+.app[data-preset="datsun-6x9"] {
+  --amber:        #C04810;
+  --amber-bright: #E87030;
+  --amber-dim:    #782808;
+  --amber-glow:   rgba(192, 72, 16, 0.14);
+  --phosphor:     #F0A060;
+  --bg:           #0C0704;
+  --bg2:          #160A04;
+}
+
+/* ── Drive-In — green phosphor ── */
+.app[data-preset="drive-in"] {
+  --amber:        #2A9A18;
+  --amber-bright: #48CC2A;
+  --amber-dim:    #145C0C;
+  --amber-glow:   rgba(42, 154, 24, 0.14);
+  --phosphor:     #80FF50;
+  --bg:           #050C04;
+  --bg2:          #081408;
+}
+
+/* ── 90s Voicemail — cold phone gray-blue ── */
+.app[data-preset="voicemail-90s"] {
+  --amber:        #5880B8;
+  --amber-bright: #80A8E8;
+  --amber-dim:    #304870;
+  --amber-glow:   rgba(88, 128, 184, 0.14);
+  --phosphor:     #A0C8FF;
+  --bg:           #050609;
+  --bg2:          #080A12;
+}
+
+/* ── VHS Camcorder — video feedback blue-purple ── */
+.app[data-preset="vhs-camcorder"] {
+  --amber:        #5840D0;
+  --amber-bright: #8868FF;
+  --amber-dim:    #301880;
+  --amber-glow:   rgba(88, 64, 208, 0.14);
+  --phosphor:     #C0A8FF;
+  --bg:           #060508;
+  --bg2:          #0C0814;
+}
+
 /* ── RESPONSIVE ──────────────────────────────────────────── */
 @media (max-width: 520px) {
   .preset-grid {
