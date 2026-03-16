@@ -6,9 +6,9 @@ import './App.css';
 const player = new RetroPlayer();
 
 const DEMO_TRACKS = [
-  { id: 'crazy-good',    label: 'Crazy Good',    url: '/audio/crazy-good.mp3',    default: true },
-  { id: 'modern-choir',  label: 'Modern Choir',  url: '/audio/modern-choir.mp3' },
-  { id: 'german-techno', label: 'German Techno', url: '/audio/german-techno.mp3' },
+  { id: 'crazy-good',    label: 'Crazy Good',    artist: 'KBD Trio',  artistUrl: 'https://kbdtrio.com',  url: '/audio/crazy-good.mp3',    default: true },
+  { id: 'modern-choir',  label: 'Modern Choir',  artist: 'POUROVER',  artistUrl: 'https://pourover.me',  url: '/audio/modern-choir.mp3' },
+  { id: 'german-techno', label: 'German Techno', artist: 'POUROVER',  artistUrl: 'https://pourover.me',  url: '/audio/german-techno.mp3' },
 ];
 
 // Montgomery Ward catalog item numbers
@@ -234,13 +234,23 @@ export default function App() {
             <span className="demo-tracks-label">— or try a demo —</span>
             <div className="demo-track-btns">
               {DEMO_TRACKS.map(t => (
-                <button
-                  key={t.id}
-                  className={`demo-track-btn${activeDemoId === t.id ? ' active' : ''}${t.default && !activeDemoId && !loaded ? ' suggested' : ''}`}
-                  onClick={() => handleDemoTrack(t)}
-                >
-                  {t.label}
-                </button>
+                <div key={t.id} className="demo-track-item">
+                  <button
+                    className={`demo-track-btn${activeDemoId === t.id ? ' active' : ''}${t.default && !activeDemoId && !loaded ? ' suggested' : ''}`}
+                    onClick={() => handleDemoTrack(t)}
+                  >
+                    {t.label}
+                  </button>
+                  <a
+                    className="demo-track-artist"
+                    href={t.artistUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    {t.artist}
+                  </a>
+                </div>
               ))}
             </div>
           </div>
