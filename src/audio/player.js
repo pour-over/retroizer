@@ -33,6 +33,16 @@ export class RetroPlayer {
   }
 
   /**
+   * Load from a URL (demo tracks). Fetches, wraps as File, delegates to load().
+   */
+  async loadUrl(url, displayName) {
+    const res  = await fetch(url);
+    const blob = await res.blob();
+    const file = new File([blob], displayName, { type: blob.type || 'audio/mpeg' });
+    return this.load(file);
+  }
+
+  /**
    * Load a File. Resolves with duration in seconds.
    */
   async load(file) {

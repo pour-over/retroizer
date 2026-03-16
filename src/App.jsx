@@ -5,6 +5,12 @@ import './App.css';
 
 const player = new RetroPlayer();
 
+const DEMO_TRACKS = [
+  { id: 'crazy-good',    label: 'Crazy Good',    url: '/audio/crazy-good.mp3',    default: true },
+  { id: 'modern-choir',  label: 'Modern Choir',  url: '/audio/modern-choir.mp3' },
+  { id: 'german-techno', label: 'German Techno', url: '/audio/german-techno.mp3' },
+];
+
 // Montgomery Ward catalog item numbers
 const CAT_NOS = {
   'broken-cassette':   'Cat. 84-1137',
@@ -22,16 +28,17 @@ const CAT_NOS = {
 };
 
 export default function App() {
-  const [loaded,      setLoaded]      = useState(false);
-  const [fileName,    setFileName]    = useState('');
-  const [duration,    setDuration]    = useState(0);
-  const [playState,   setPlayState]   = useState('idle');
-  const [presetId,    setPresetId]    = useState('broken-cassette');
-  const [intensity,   setIntensity]   = useState(0.5);
-  const [exporting,   setExporting]   = useState(false);
-  const [dragging,    setDragging]    = useState(false);
-  const [statusText,  setStatusText]  = useState('awaiting source file...');
-  const [statusState, setStatusState] = useState('idle');
+  const [loaded,       setLoaded]      = useState(false);
+  const [fileName,     setFileName]    = useState('');
+  const [duration,     setDuration]    = useState(0);
+  const [playState,    setPlayState]   = useState('idle');
+  const [presetId,     setPresetId]    = useState('broken-cassette');
+  const [intensity,    setIntensity]   = useState(0.5);
+  const [exporting,    setExporting]   = useState(false);
+  const [dragging,     setDragging]    = useState(false);
+  const [statusText,   setStatusText]  = useState('awaiting source file...');
+  const [statusState,  setStatusState] = useState('idle');
+  const [activeDemoId, setActiveDemoId] = useState(null);
 
   const fileInputRef = useRef(null);
 
@@ -63,6 +70,7 @@ export default function App() {
 
   const handleFile = useCallback(async (file) => {
     if (!file) return;
+    setActiveDemoId(null);
     setFileName(file.name);
     setLoaded(false);
     setStatusText(`decoding · ${file.name}`);
@@ -77,6 +85,27 @@ export default function App() {
     } catch (e) {
       console.error(e);
       setStatusText('error decoding file — try wav or mp3');
+      setStatusState('error');
+    }
+  }, [presetId, intensity]);
+
+  const handleDemoTrack = useCallback(async (track) => {
+    setActiveDemoId(track.id);
+    setFileName(track.label);
+    setLoaded(false);
+    setStatusText(`loading · ${track.label}`);
+    setStatusState('active');
+    try {
+      const dur = await player.loadUrl(track.url, track.label);
+      player.applyPreset(presetId, intensity);
+      setDuration(dur);
+      setLoaded(true);
+      setStatusText(`ready · ${formatDuration(dur)} · ${track.label}`);
+      setStatusState('active');
+    } catch (e) {
+      console.error(e);
+      setActiveDemoId(null);
+      setStatusText('error loading demo track');
       setStatusState('error');
     }
   }, [presetId, intensity]);
@@ -200,6 +229,21 @@ export default function App() {
             )}
           </div>
         </div>
+
+          <div className="demo-tracks">
+            <span className="demo-tracks-label">— or try a demo —</span>
+            <div className="demo-track-btns">
+              {DEMO_TRACKS.map(t => (
+                <button
+                  key={t.id}
+                  className={`demo-track-btn${activeDemoId === t.id ? ' active' : ''}${t.default && !activeDemoId && !loaded ? ' suggested' : ''}`}
+                  onClick={() => handleDemoTrack(t)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
         {/* ── AGING PRESET ─────────────────────────────── */}
         <div className="panel">
