@@ -46,7 +46,8 @@ export class RetroPlayer {
    * Load a File. Resolves with duration in seconds.
    */
   async load(file) {
-    await Tone.start();
+    // Tone.start() (AudioContext resume) lives in play() — not here.
+    // This lets us preload on mount before any user gesture.
     this.chain.build();
 
     // Revoke previous object URL
@@ -78,6 +79,10 @@ export class RetroPlayer {
 
     this._setState('idle');
     return this.audioBuffer.duration;
+  }
+
+  setVolume(db) {
+    Tone.getDestination().volume.rampTo(db, 0.05);
   }
 
   applyPreset(presetId, intensity = 1.0) {

@@ -39,6 +39,7 @@ export default function App() {
   const [statusText,   setStatusText]  = useState('awaiting source file...');
   const [statusState,  setStatusState] = useState('idle');
   const [activeDemoId, setActiveDemoId] = useState(null);
+  const [volume,       setVolume]       = useState(0); // dB, -30 to +6
 
   const fileInputRef = useRef(null);
 
@@ -51,6 +52,27 @@ export default function App() {
   durationRef.current = duration;
   presetIdRef.current = presetId;
   loadedRef.current   = loaded;
+
+  // Preload Crazy Good on mount — Tone.start() is deferred to play(),
+  // so this works before any user gesture.
+  useEffect(() => {
+    const cg = DEMO_TRACKS.find(t => t.default);
+    setActiveDemoId(cg.id);
+    setFileName(cg.label);
+    setStatusText(`loading · ${cg.label}`);
+    setStatusState('active');
+    player.loadUrl(cg.url, cg.label).then(dur => {
+      player.applyPreset('broken-cassette', 0.5);
+      setDuration(dur);
+      setLoaded(true);
+      setStatusText(`ready · ${formatDuration(dur)} · ${cg.label}`);
+      setStatusState('active');
+    }).catch(() => {
+      setActiveDemoId(null);
+      setStatusText('awaiting source file...');
+      setStatusState('idle');
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     player.onStateChange((state) => {
@@ -128,6 +150,11 @@ export default function App() {
   const handleIntensity = (val) => {
     setIntensity(val);
     player.applyPreset(presetId, val);
+  };
+
+  const handleVolume = (db) => {
+    setVolume(db);
+    player.setVolume(db);
   };
 
   const handlePlay = () => {
@@ -286,6 +313,7 @@ export default function App() {
             <span className="panel-cat">Model RW-51</span>
           </div>
           <div className="remote-panel">
+            <div className="remote-row-label">Aging Intensity</div>
             <div className="intensity-row">
               <span className="intensity-label">MIN</span>
               <div className="slider-wrap">
@@ -304,8 +332,33 @@ export default function App() {
               <span className="intensity-value">{Math.round(intensity * 100)}</span>
             </div>
             <div className="remote-footer">
-              <span className="remote-desc">Aging Intensity · sweet spot: 20–40% · 100% is a warning</span>
+              <span className="remote-desc">sweet spot: 20–40% · 100% is a warning</span>
               <span className="intensity-word">{intensityLabel()}</span>
+            </div>
+
+            <div className="remote-divider" />
+
+            <div className="remote-row-label">Monitor Volume</div>
+            <div className="intensity-row">
+              <span className="intensity-label">−30</span>
+              <div className="slider-wrap">
+                <div className="slider-wire" />
+                <input
+                  type="range"
+                  min={-30}
+                  max={6}
+                  step={1}
+                  value={volume}
+                  onChange={e => handleVolume(parseFloat(e.target.value))}
+                  className="intensity-slider volume-slider"
+                />
+              </div>
+              <span className="intensity-label intensity-label-right">+6</span>
+              <span className="intensity-value">{volume > 0 ? `+${volume}` : volume} dB</span>
+            </div>
+            <div className="remote-footer clipping-warning">
+              <span>⚠ Clipping and static artifacts are normal at high intensity.</span>
+              <span className="headphone-alert">🎧 Lower volume before previewing.</span>
             </div>
           </div>
         </div>

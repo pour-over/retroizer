@@ -860,3 +860,36 @@ body {
     border-bottom: none;
   }
 }
+
+/* ── VOLUME + CLIPPING WARNING ───────────────────────────── */
+.remote-row-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+  margin-bottom: 0.35rem;
+  margin-top: 0.1rem;
+}
+
+.remote-divider {
+  border: none;
+  border-top: 1px solid var(--amber-dim);
+  opacity: 0.3;
+  margin: 0.9rem 0 0.7rem;
+}
+
+.clipping-warning {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--amber-dim);
+  letter-spacing: 0.04em;
+  margin-top: 0.5rem;
+}
+
+.headphone-alert {
+  color: var(--amber);
+}
