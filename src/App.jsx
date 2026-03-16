@@ -241,17 +241,16 @@ export default function App() {
               style={{ display: 'none' }}
               onChange={e => handleFile(e.target.files[0])}
             />
-            {loaded ? (
+            <div className="drop-prompt">
+              <span className="drop-icon">◎</span>
+              <span className="drop-main-text">Insert Recording</span>
+              <span className="drop-sub-text">Drop audio file here or click to browse</span>
+              <span className="drop-hint">WAV · MP3 · FLAC · OGG</span>
+            </div>
+            {loaded && (
               <div className="file-info">
                 <span className="file-name">{fileName}</span>
                 <span className="file-duration">{formatDuration(duration)} · loaded</span>
-              </div>
-            ) : (
-              <div className="drop-prompt">
-                <span className="drop-icon">◎</span>
-                <span className="drop-main-text">Insert Recording</span>
-                <span className="drop-sub-text">Drop audio file here or click to browse</span>
-                <span className="drop-hint">WAV · MP3 · FLAC · OGG</span>
               </div>
             )}
           </div>
