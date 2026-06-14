@@ -40,14 +40,21 @@ export default function App() {
   const [fileName,     setFileName]    = useState('');
   const [duration,     setDuration]    = useState(0);
   const [playState,    setPlayState]   = useState('idle');
-  const [presetId,     setPresetId]    = useState('broken-cassette');
-  const [intensity,    setIntensity]   = useState(0.5);
+  const [presetId,     setPresetId]    = useState('am-radio');
+  const [intensity,    setIntensity]   = useState(0.84);
   const [exporting,    setExporting]   = useState(false);
   const [dragging,     setDragging]    = useState(false);
   const [statusText,   setStatusText]  = useState('awaiting source file...');
   const [statusState,  setStatusState] = useState('idle');
   const [activeDemoId, setActiveDemoId] = useState(null);
-  const [volume,       setVolume]       = useState(0); // dB, -30 to +6
+  const [volume,       setVolume]       = useState(-6); // dB, -30 to +6
+
+  // ── KBD Complete Archive (streams from kbdtrio.com) ──
+  const [library,    setLibrary]    = useState(null);
+  const [libOpen,    setLibOpen]    = useState(false);
+  const [libChannel, setLibChannel] = useState('processed');
+  const [libFilter,  setLibFilter]  = useState('');
+  const [libStatus,  setLibStatus]  = useState('idle'); // idle | loading | ready | error
 
   const fileInputRef = useRef(null);
 
@@ -70,7 +77,7 @@ export default function App() {
     setStatusText(`loading · ${cg.label}`);
     setStatusState('active');
     player.loadUrl(cg.url, cg.label).then(dur => {
-      player.applyPreset('broken-cassette', 0.5);
+      player.applyPreset('am-radio', 0.84);
       setDuration(dur);
       setLoaded(true);
       setStatusText(`ready · ${formatDuration(dur)} · ${cg.label}`);
@@ -136,6 +143,38 @@ export default function App() {
       console.error(e);
       setActiveDemoId(null);
       setStatusText('error loading demo track');
+      setStatusState('error');
+    }
+  }, [presetId, intensity]);
+
+  const handleLibraryToggle = useCallback(() => {
+    setLibOpen(o => !o);
+    if (!library && libStatus !== 'loading') {
+      setLibStatus('loading');
+      fetch('https://kbdtrio.com/library.json')
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(data => { setLibrary(data); setLibStatus('ready'); })
+        .catch(() => setLibStatus('error'));
+    }
+  }, [library, libStatus]);
+
+  const handleLibTrack = useCallback(async (track) => {
+    setActiveDemoId(track.url);
+    setFileName(track.title);
+    setLoaded(false);
+    setStatusText(`pulling from the archive · ${track.title}`);
+    setStatusState('active');
+    try {
+      const dur = await player.loadUrl(track.url, track.title);
+      player.applyPreset(presetId, intensity);
+      setDuration(dur);
+      setLoaded(true);
+      setStatusText(`ready · ${formatDuration(dur)} · ${track.title}`);
+      setStatusState('active');
+    } catch (e) {
+      console.error(e);
+      setActiveDemoId(null);
+      setStatusText('error reaching the archive — kbdtrio.com may be hiding');
       setStatusState('error');
     }
   }, [presetId, intensity]);
@@ -303,6 +342,66 @@ export default function App() {
               ))}
             </div>
           </div>
+
+        {/* ── KBD COMPLETE ARCHIVE ─────────────────────── */}
+        <div className="panel">
+          <div className="panel-label">
+            <span>◈ The Complete KBD Trio Archive</span>
+            <span className="panel-cat">Cat. 88-0178 · Streams From The Source</span>
+          </div>
+          <button className="library-toggle" onClick={handleLibraryToggle}>
+            {libOpen ? '▾ Close The Vault' : '▸ Open The Vault — 178 Recordings, Zero Curation'}
+          </button>
+          {libOpen && (
+            <div className="library-body">
+              {libStatus === 'loading' && (
+                <p className="library-note">contacting kbdtrio.com · the tape is always rolling…</p>
+              )}
+              {libStatus === 'error' && (
+                <p className="library-note library-error">archive unreachable — the Bureau denies everything. try again.</p>
+              )}
+              {libStatus === 'ready' && library && (
+                <>
+                  <div className="library-controls">
+                    <div className="library-channels">
+                      {Object.entries(library.channels).map(([key, ch]) => (
+                        <button
+                          key={key}
+                          className={`library-channel${libChannel === key ? ' active' : ''}`}
+                          onClick={() => setLibChannel(key)}
+                        >
+                          {ch.label} ({ch.tracks.length})
+                        </button>
+                      ))}
+                    </div>
+                    <input
+                      type="text"
+                      className="library-search"
+                      placeholder="search the evidence…"
+                      value={libFilter}
+                      onChange={e => setLibFilter(e.target.value)}
+                    />
+                  </div>
+                  <div className="library-list">
+                    {library.channels[libChannel].tracks
+                      .filter(t => t.title.toLowerCase().includes(libFilter.toLowerCase()))
+                      .map(t => (
+                        <button
+                          key={t.url}
+                          className={`library-track${activeDemoId === t.url ? ' active' : ''}`}
+                          onClick={() => handleLibTrack(t)}
+                        >
+                          <span className="library-track-title">{t.title}</span>
+                          <span className="library-track-meta">{t.meta}</span>
+                        </button>
+                      ))}
+                  </div>
+                  <p className="library-note">every recording KBD Trio has ever admitted to · streamed live from <a href="https://kbdtrio.com" target="_blank" rel="noopener noreferrer">kbdtrio.com</a></p>
+                </>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* ── AGING PRESET ─────────────────────────────── */}
         <div className="panel">

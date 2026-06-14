@@ -901,3 +901,102 @@ body {
 .status-bar-top {
   margin-bottom: 0.8rem;
 }
+
+/* ── KBD COMPLETE ARCHIVE ─────────────────────── */
+.library-toggle {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  text-align: left;
+  padding: 0.7rem 1rem;
+  background: var(--bg2);
+  border: 1px solid var(--bakelite);
+  color: var(--amber-bright);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.library-toggle:hover {
+  border-color: var(--amber);
+  background: var(--amber-glow);
+}
+.library-body { margin-top: 0.8rem; }
+.library-controls {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+.library-channels { display: flex; gap: 4px; }
+.library-channel {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  padding: 6px 10px;
+  background: var(--bg2);
+  border: 1px solid var(--bakelite);
+  color: var(--cream-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.library-channel.active {
+  color: var(--amber-bright);
+  border-color: var(--amber);
+  background: var(--amber-glow);
+}
+.library-search {
+  flex: 1;
+  min-width: 160px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 6px 10px;
+  background: var(--bg2);
+  border: 1px solid var(--bakelite);
+  color: var(--cream);
+  outline: none;
+}
+.library-search:focus { border-color: var(--amber); }
+.library-list {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--bakelite);
+  background: var(--bg2);
+}
+.library-list::-webkit-scrollbar { width: 6px; }
+.library-list::-webkit-scrollbar-track { background: var(--bg2); }
+.library-list::-webkit-scrollbar-thumb { background: var(--bakelite); }
+.library-track {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 7px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(58, 40, 16, 0.5);
+  color: var(--cream);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.library-track:hover { background: var(--amber-glow); color: var(--amber-bright); }
+.library-track.active { color: var(--amber-bright); background: var(--amber-glow); box-shadow: inset 2px 0 0 var(--amber); }
+.library-track-meta {
+  font-size: 0.58rem;
+  color: var(--cream-dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.library-note {
+  margin-top: 0.6rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  color: var(--cream-dim);
+}
+.library-note a { color: var(--amber); }
+.library-error { color: #c0392b; }
